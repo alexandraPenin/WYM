@@ -28,27 +28,23 @@
     <center>
         
         <br><br>
+    
        
-        <form method="post" action="traitement.php">
+        <form action="/form" target="_self" method="post">
             <p>
-                <label for="ameliorer"> <font color="#185c3e">Our answer</font></label><br />
+                <label for="textmodel"> <font color="#185c3e">Our answer</font></label><br />
+                <div>{{resume}}</div>
                 <textarea name="ameliorer" id="ameliorer" rows="10" cols="25"></textarea>
+                <input type="text" id='textmodel' name='textmodel' value="VOICI LE TEXTE PROPOSE PAR DEFAUT"><br>
             </p>
             <input type="submit" value="Submit">
          </form> 
-            
-    
-            
+                     
         
 </font>
         
        
       </form> </center></h1>
-      <html>
-  
- 
-</html>
-
 
       <ul id="navigation">
     
@@ -69,3 +65,4 @@
     </ul>
 </body>
 </html>
+
