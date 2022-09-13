@@ -1,12 +1,26 @@
 <html>
-	<body>
-		<h1>Entrez votre texte</h1>
+  <head>
+    <title>Templating in Flask</title>
+  </head>
+  <body>
+    <h1>Modèle pour résumer votre texte</h1>
+  </body>
 		
+  <form action="/model" method="post">
+    <label for="textmodel">Rentrez votre texte ICI:</label><br>
+    <input type="text" id='textmodel' name='textmodel' value="VOICI LE TEXTE PROPOSE PAR DEFAUT"><br>
+
+      <input type="submit" value="Submit">
+    </form>
+
+  </form> 
+
+
 		<form action="/form" target="_self" method="post"> 
-			<label for="fname">First name:</label><br>
+			<label for="textmodel">Voici le résumé du texte:</label><br>
+			<div>{{resume}}</div>
+
 		  </form> 
 		
-		<a href="/">Home</a> 
-		<a href="/about"> About</a>
 	</body>
 </html>
