@@ -3,10 +3,10 @@
 # importing the requests library
 import requests
 
-def resume_text(texte):
+def resume_text(texte, host="localhost"):
 #fonction qui récupère une chaîne de caractère et qui affiche un résumé de cette fonction
     payload = {"text":[texte]}
-    r = requests.post(url = 'http://0.0.0.0:5000/model/predict', json = payload)
+    r = requests.post(url = f'http://{host}:5000/model/predict', json = payload)
     return r.json()
 
 

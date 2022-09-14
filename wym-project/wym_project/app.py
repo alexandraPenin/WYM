@@ -1,35 +1,40 @@
-
-from flask import Flask, render_template, request
-from model_utils import resume_text
-import psycopg2
-import database
-import db_utils
 import os
 
-from db_utils import User, pgdb
+from flask import Flask, render_template, request
+import psycopg2
 
-if os.getenv("DOCKER_BUILD")==1 :
+from wym_project.model_utils import resume_text
+from wym_project.db_utils import User, pgdb
+
+
+if os.getenv("DOCKER_BUILD"):
     db_host = os.getenv("DB_HOST")
     model_host = os.getenv("MODEL_HOST")
 else:
     db_host = "localhost"
-    model_host ="localhost"
+    model_host = "localhost"
+
+print(f"{db_host=}")
+print(f"{model_host=}")
+
+mydb = pgdb(db_host, 5432)
+
+# creation de la table 'users' (si elle n'existe pas déjà)
+mydb.connect()
+mydb.create_users_table()    
+mydb.disconnect()
+
 
 app = Flask(__name__)
-mydb = pgdb(db_host,5432)
-
-@app.route("/")
-def home():
-	return render_template('index.html')
 
 
 @app.route("/")
 def home():
 	return render_template('index.html')
+
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    print('ping')
     if request.method == 'GET':
         return render_template('contact.html')
     elif request.method == 'POST':
@@ -43,7 +48,9 @@ def contact():
         mydb.connect()
         mydb.insert_user(user)    
         mydb.disconnect()
+
         return render_template('contact.html')
+
 
 @app.route('/contacted')
 def contacted():
@@ -64,20 +71,14 @@ def model():
         return render_template("model.html")
     elif request.method=="POST":
         form_data_text=request.form['textmodel']
-        form_data_resum=resume_text(form_data_text,model_host=model_host)
+        form_data_resum=resume_text(form_data_text, host=model_host)
         print(form_data_resum)
     return render_template("model.html", resume=form_data_resum['summary_text'][0])
-    
-	
-@app.route("/contact") 
-def contact():
-    return render_template("contact.html") 
 
 
-@app.route("/contacted") 
-def contacted():
-    return render_template("contacted.html") 
+def main():
+  app.run(debug = True, host="0.0.0.0", port=5001) # démarrage de l’application
 
 
 if __name__ == "__main__":
-    app.run(debug = True, host="0.0.0.0", port=5001) # démarrage de l’application
+  main()

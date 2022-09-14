@@ -1,9 +1,6 @@
 import mailbox
 import psycopg2
 
-#!/usr/bin/python
-
-
 
 class User:
     def __init__(self, nom, prenom, mail, telephone):
@@ -13,12 +10,12 @@ class User:
         self.telephone = telephone
 
 class pgdb :
-    def __init__(self, host, port, dbname="postgres", user="Eunice", password="mysecretpassword"):
+    def __init__(self, host, port, dbname="postgres", user="wym_admin", password="admin"):
         self.host = host
         self.port = port
         self.dbname = dbname
-        self.user=user
-        self.password=password
+        self.user = user
+        self.password = password
         self.conn = None
 
     def connect(self):
@@ -27,11 +24,12 @@ class pgdb :
         try:
             # connect to the PostgreSQL server
             print('Connecting to the PostgreSQL database...')
-            conn = psycopg2.connect(user=self.user, host=self.host, dbname=self.dbname, port=self.port, password=self.password)
-            self.conn = conn
+            self.conn = psycopg2.connect(user=self.user, host=self.host, dbname=self.dbname, port=self.port, password=self.password)
+
+            cur = self.conn.cursor()
             # create a cursor"Hornowski", "Eunice", "0606060606", "e@gmail.com")
-            print(db_version)
-        # close the communication with the PostgreSQL
+            # print(db_version)
+            # close the communication with the PostgreSQL
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
@@ -41,18 +39,30 @@ class pgdb :
         #         print('Database connection closed.')
         return conn
 
+    def create_users_table(self):
+        print(f"attempting to create table: users (the creation will be skipped if the table already exists)")
+        cur = self.conn.cursor()
+        res = cur.execute(f"""
+                CREATE TABLE IF NOT EXISTS users (
+                    nom TEXT,
+                    prenom TEXT,
+                    telephone TEXT,
+                    mail TEXT);
+                """)
+        self.conn.commit()
+
     def insert_user(self, user):
         print("insertion")
         cur = self.conn.cursor()
         res = cur.execute('INSERT INTO users (nom, prenom, telephone, mail) VALUES(%s, %s, %s, %s)', (user.nom, user.prenom, user.mail, user.telephone))
         self.conn.commit()
-        print(res)
+        print(f"inserted: {res}")
     
     def get_users(self):
         print("get")
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM users')
-        res=cur.fetchall()
+        res = cur.fetchall()
         #print(res)
         return(res)
 
