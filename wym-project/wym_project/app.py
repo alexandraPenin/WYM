@@ -35,8 +35,10 @@ def contact():
 def contacted():
     mydb.connect()
     users = mydb.get_users()
+    print('user')
+    print(users[0][0])
     mydb.disconnect()
-    return render_template('contacted.html', users=users)
+    return render_template('contacted.html', users=users[0])
 
 
 @app.route("/about") 
