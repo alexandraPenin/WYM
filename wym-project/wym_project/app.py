@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request
 from model_utils import resume_text
 import psycopg2
@@ -22,26 +23,39 @@ def home():
 	return render_template('index.html')
 
 
-@app.route('/form', methods=['GET', 'POST'])
-def form():
+@app.route("/")
+def home():
+	return render_template('index.html')
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    print('ping')
     if request.method == 'GET':
-        return render_template('form.html')
+        return render_template('contact.html')
     elif request.method == 'POST':
         nom = request.form['nom']
         prenom = request.form['prenom']
         telephone = request.form['telephone']
         mail = request.form['mail']
-
+        print(nom, prenom, mail, telephone)
         user = User(nom, prenom, mail, telephone)
+        
         mydb.connect()
         mydb.insert_user(user)    
         mydb.disconnect()
-        return render_template('form.html')
+        return render_template('contact.html')
+
+@app.route('/contacted')
+def contacted():
+    mydb.connect()
+    users = mydb.get_users()
+    mydb.disconnect()
+    return render_template('contacted.html', users=users)
+
 
 @app.route("/about") 
 def about():
     return render_template("about.html") 
-
 
 
 @app.route("/model",methods=["GET","POST"]) 
@@ -67,4 +81,3 @@ def contacted():
 
 if __name__ == "__main__":
     app.run(debug = True, host="0.0.0.0", port=5001) # démarrage de l’application
-
