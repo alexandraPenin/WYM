@@ -1,0 +1,31 @@
+version: "3.4"
+services:
+  db:
+    image: postgres
+    ports: 
+      - "5432:5432"
+    volumes:
+      - ./dataset:/dataset
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: wym_admin
+
+  model: 
+    image: codait/max-text-summarizer
+     ports: 
+      - "5000:5000"      
+      
+  web:
+    build: ../wym-project/
+    depends_on:
+      - db
+      - model
+    environment:
+      - DOCKER_BUILD=1
+      - DB_PORT=5432
+      - DB_HOST=db
+      - MODEL_PORT=5000
+      - MODEL_HOST=model
+    ports:
+      - "5001:5001"
+  

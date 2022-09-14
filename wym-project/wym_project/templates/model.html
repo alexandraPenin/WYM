@@ -1,71 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>To contact us</title>
-    
-</head>
-<body style="background-color:#3399ff;"></body>
-    <ul id="navigation">
-    
-        <li><a href="/"> Return page home</a></li>
-    
-    </ul>
+<html>
+  <head>
+    <title>Templating in Flask</title>
+  </head>
 
-    <h1><center>
-        <font color="#185c3e">You want to contact us  </font><br><br><br><br>
-               
-                    
-                
-        </font>
-    <center>
-        <form method="post" action="traitement.php">
-            <p>
-                <label for="ameliorer">Identify yourself</label><br />
-                <textarea name="ameliorer" id="ameliorer" rows="10" cols="25"></textarea>
-            </p>
-         </form> 
-            
-    <center>
-        
-        <br><br>
-       
-        <form method="post" action="traitement.php">
-            <p>
-                <label for="ameliorer"> <font color="#185c3e">Our answer</font></label><br />
-                <textarea name="ameliorer" id="ameliorer" rows="10" cols="25"></textarea>
-            </p>
-            <input type="submit" value="Submit">
-         </form> 
-            
+        <body style="background-color:#3399ff;"></body>
+
+          <ul id="navigation">
     
-            
-        
-</font>
-        
-       
-      </form> </center></h1>
-      <html>
+               <li><a href="/"> Return page home</a></li>
+
+         </ul>
+       <body>
   
- 
-</html>
+              <h1>Modèle pour résumer votre texte</h1>
+      </body><br><br><br>
+		<center>
+  <form action="/model" method="post">
+    <label for="textmodel">Rentrez votre texte ICI:</label><br>
+    <input type="text" id='textmodel' name='textmodel' value="VOICI LE TEXTE PROPOSE PAR DEFAUT"><br>
+
+      <input type="submit" value="Submit">
+    </form>
+    </center>
+    <center>
+  </form> 
 
 
-      <ul id="navigation">
-    
-        <li><a href="about"> About us </a>
-        </li>
-    
-    </ul>
-    
-    <ul id="navigation">
-    
-        <li><a href="contact"> Contact  </a></li>
-    
-    </ul>
-    <ul id="navigation">
-    
-        <li><a href="contacted"> Contacted </a></li>
-    
-    </ul>
-</body>
+		<form action="/model" target="_self" method="post"> 
+      <p>
+                <label for="textmodel"> <font color="#185c3e">Voici le résumé du texte:</font></label><br />
+                
+                <textarea name="ameliorer" id="ameliorer" rows="10" cols="25">
+                  {{ resume }}
+                </textarea>
+                
+            
+			
+           
+      </p>
+
+		  </form> </center>
+		</html>
+	</body>
 </html>
+
