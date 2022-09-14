@@ -53,7 +53,8 @@ class pgdb :
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM users')
         res=cur.fetchall()
-        print(res)
+        #print(res)
+        return(res)
 
     def delete_users(self):
         cur = self.conn.cursor()

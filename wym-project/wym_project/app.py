@@ -31,6 +31,14 @@ def contact():
         mydb.disconnect()
         return render_template('contact.html')
 
+@app.route('/contacted')
+def contacted():
+    mydb.connect()
+    users = mydb.get_users()
+    mydb.disconnect()
+    return render_template('contacted.html', users=users)
+
+
 @app.route("/about") 
 def about():
     return render_template("about.html") 
@@ -44,11 +52,6 @@ def model():
         form_data_resum=resume_text(form_data_text)
         print(form_data_resum)
     return render_template("model.html",resume=form_data_resum)
-	
-
-@app.route("/contacted") 
-def contacted():
-    return render_template("contacted.html") 
 
 
 if __name__ == "__main__":
