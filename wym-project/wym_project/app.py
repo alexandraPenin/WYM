@@ -4,9 +4,7 @@ from flask import Flask, render_template, request
 import psycopg2
 
 from wym_project.model_utils import resume_text
-from wym_project.db_utils import User, pgdb
-import time
-
+from wym_project.db_utils import User, pgdb, Metrics
 
 if os.getenv("DOCKER_BUILD"):
     db_host = os.getenv("DB_HOST")
@@ -23,7 +21,9 @@ mydb = pgdb(db_host, 5432)
 # creation de la table 'users' (si elle n'existe pas déjà)
 mydb.connect()
 mydb.create_users_table()    
+mydb.create_metrics_table()
 mydb.disconnect()
+
 
 
 app = Flask(__name__)
@@ -56,7 +56,7 @@ def contact():
 @app.route('/contacted')
 def contacted():
     mydb.connect()
-    users = mydb.get_users()
+    users = mydb.get_data('users')
     mydb.disconnect()
     return render_template('contacted.html', users=users)
 
@@ -80,6 +80,13 @@ def model():
         result_time=second_end-second_start
         print("The end of the chrono:", second_end)
         print("The time of execution of your request is:",result_time)
+        execution_time = 0
+        word_freq = "{'mot1':10, 'mot2':5}"
+        text_len = len(form_data_text)
+        metrics = Metrics(execution_time, word_freq, text_len)
+        mydb.connect()
+        mydb.insert_metrics(metrics)    
+        mydb.disconnect()
         print(form_data_resum)
 
     return render_template("model.html", resume=form_data_resum['summary_text'][0],result=result_time,taille_text=taille_text)
