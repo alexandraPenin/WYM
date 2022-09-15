@@ -1,6 +1,12 @@
 import mailbox
 import psycopg2
 
+class Metrics:
+    def __init__(self, execution_time, word_freq, text_len):
+        self.execution_time = execution_time
+        self.word_freq = word_freq
+        self.text_len = text_len
+
 
 class User:
     def __init__(self, nom, prenom, mail, telephone):
@@ -51,6 +57,26 @@ class pgdb :
                 """)
         self.conn.commit()
 
+
+    def create_metrics_table(self):
+        print(f"attempting to create table: metrics (the creation will be skipped if the table already exists)")
+        cur = self.conn.cursor()
+        res = cur.execute(f"""
+                CREATE TABLE IF NOT EXISTS metrics (
+                    execution_time FLOAT,
+                    text_len INT,
+                    word_freq TEXT);
+                """)
+        self.conn.commit()
+
+    def insert_metrics(self, metrics):
+        print("insertion")
+        cur = self.conn.cursor()
+        
+        res = cur.execute('INSERT INTO metrics (execution_time, word_freq, text_len) VALUES(%s,%s,%s)', (metrics.execution_time, metrics.word_freq, metrics.text_len))
+        self.conn.commit()
+        print(f"inserted: {res}")
+
     def insert_user(self, user):
         print("insertion")
         cur = self.conn.cursor()
@@ -58,17 +84,17 @@ class pgdb :
         self.conn.commit()
         print(f"inserted: {res}")
     
-    def get_users(self):
+    def get_data(self, table_name):
         print("get")
         cur = self.conn.cursor()
-        cur.execute('SELECT * FROM users')
+        cur.execute(f'SELECT * FROM {table_name}')
         res = cur.fetchall()
         #print(res)
         return(res)
 
-    def delete_users(self):
-        cur = self.conn.cursor()
-        res = cur.execute('DELETE * FROM users')
+    #def delete_users(self):
+    #    cur = self.conn.cursor()
+    #    res = cur.execute('DELETE * FROM users')
 
 
     def disconnect(self):
@@ -82,5 +108,5 @@ if __name__ == '__main__':
     mydb.connect()
     user = User('bou','ra','boura@mail.org','06000000')
     mydb.insert_username(user=user)
-    mydb.get_users()
+    mydb.get_data('users')
     mydb.disconnect()

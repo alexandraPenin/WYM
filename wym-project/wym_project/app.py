@@ -4,7 +4,7 @@ from flask import Flask, render_template, request
 import psycopg2
 
 from wym_project.model_utils import resume_text
-from wym_project.db_utils import User, pgdb
+from wym_project.db_utils import User, pgdb, Metrics
 
 
 if os.getenv("DOCKER_BUILD"):
@@ -22,7 +22,9 @@ mydb = pgdb(db_host, 5432)
 # creation de la table 'users' (si elle n'existe pas déjà)
 mydb.connect()
 mydb.create_users_table()    
+mydb.create_metrics_table()
 mydb.disconnect()
+
 
 
 app = Flask(__name__)
@@ -55,7 +57,7 @@ def contact():
 @app.route('/contacted')
 def contacted():
     mydb.connect()
-    users = mydb.get_users()
+    users = mydb.get_data('users')
     mydb.disconnect()
     return render_template('contacted.html', users=users)
 
@@ -71,13 +73,21 @@ def model():
         return render_template("model.html")
     elif request.method=="POST":
         form_data_text=request.form['textmodel']
+
         form_data_resum=resume_text(form_data_text, host=model_host)
+        execution_time = 0
+        word_freq = "{'mot1':10, 'mot2':5}"
+        text_len = len(form_data_text)
+        metrics = Metrics(execution_time, word_freq, text_len)
+        mydb.connect()
+        mydb.insert_metrics(metrics)    
+        mydb.disconnect()
         print(form_data_resum)
     return render_template("model.html", resume=form_data_resum['summary_text'][0])
 
 
 def main():
-  app.run(debug = True, host="0.0.0.0", port=5001) # démarrage de l’application
+  app.run(debug = True, host="0.0.0.0", port=5002) # démarrage de l’application
 
 
 if __name__ == "__main__":
