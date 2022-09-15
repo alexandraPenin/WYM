@@ -5,6 +5,7 @@ import psycopg2
 
 from wym_project.model_utils import resume_text
 from wym_project.db_utils import User, pgdb
+import time
 
 
 if os.getenv("DOCKER_BUILD"):
@@ -71,9 +72,17 @@ def model():
         return render_template("model.html")
     elif request.method=="POST":
         form_data_text=request.form['textmodel']
+        taille_text=len(form_data_text)
+        second_start=time.time()
+        print("The biginning of the chrono:", second_start)
         form_data_resum=resume_text(form_data_text, host=model_host)
+        second_end=time.time()
+        result_time=second_end-second_start
+        print("The end of the chrono:", second_end)
+        print("The time of execution of your request is:",result_time)
         print(form_data_resum)
-    return render_template("model.html", resume=form_data_resum['summary_text'][0])
+
+    return render_template("model.html", resume=form_data_resum['summary_text'][0],result=result_time,taille_text=taille_text)
 
 
 def main():
