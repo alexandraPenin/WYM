@@ -1,0 +1,8 @@
+FROM python:3.10
+WORKDIR /monitoring
+COPY ./requirements.txt ./requirements.txt
+RUN pip3 install -r requirements.txt
+                                              
+Python (et non pas un wheel)
+COPY . .
+CMD streamlit run monitoring/dashboard.py

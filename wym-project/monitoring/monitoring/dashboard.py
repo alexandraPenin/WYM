@@ -1,18 +1,13 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pandas as pd
-import psycopg2
 
 
 st.title('Uber pickups in NYC')
 
 DATE_COLUMN = 'date/time'
-#DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
+DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
             'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
-with psycopg2.connect("host='{}' port={} dbname='{}' user={} password={}".format(host, port, dbname, username, pwd)) as conn:
-    sql = "select count(*) from table;"
-    dat = pd.read_sql_query(sql, conn)
 
 @st.cache
 def load_data(nrows):

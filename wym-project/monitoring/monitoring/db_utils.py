@@ -1,9 +1,6 @@
 import mailbox
 import psycopg2
 
-
-
-
 class Metrics:
     def __init__(self, execution_time, word_freq, text_len):
         self.execution_time = execution_time
@@ -59,10 +56,6 @@ class pgdb :
                     mail TEXT);
                 """)
         self.conn.commit()
-    class utilisateur(Base):
-            __tablename__ = 'user'
-            nom TEXT = db.Column()
-
 
 
     def create_metrics_table(self):
@@ -70,8 +63,8 @@ class pgdb :
         cur = self.conn.cursor()
         res = cur.execute(f"""
                 CREATE TABLE IF NOT EXISTS metrics (
-                    execution_time FLOAT,
-                    text_len INT,
+                    execution_time FLOAT
+                    text_len INT
                     word_freq TEXT);
                 """)
         self.conn.commit()
