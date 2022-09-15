@@ -87,7 +87,7 @@ def model():
 
 
 def main():
-  app.run(debug = True, host="0.0.0.0", port=5002) # démarrage de l’application
+  app.run(debug = True, host="0.0.0.0", port=5001) # démarrage de l’application
 
 
 if __name__ == "__main__":
